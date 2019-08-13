@@ -4,7 +4,7 @@ use csv::{Reader as CsvReader, StringRecord as CsvStringRecord};
 use pyo3::prelude::*;
 use pyo3::{PyIterProtocol, PyObjectProtocol};
 
-use super::record::CsvRecord;
+use super::record::Record;
 use crate::errors::ApplicationError;
 
 #[pyclass]
@@ -15,7 +15,7 @@ pub struct Reader {
 
 #[pymethods]
 impl Reader {
-    /// Returns a `CsvRecord` returning the first row read by this parse.
+    /// Returns a `Record` returning the first row read by this parse.
     ///
     /// If no row has been read yet, then this will force parsing of the first row.
     ///
@@ -27,7 +27,7 @@ impl Reader {
     ///
     /// Note that this method may be used regardless of whether `has_headers`
     /// was enabled (but it is enabled by default).
-    fn headers(&mut self) -> PyResult<CsvRecord> {
+    fn headers(&mut self) -> PyResult<Record> {
         let headers = self
             .reader
             .headers()
@@ -62,7 +62,7 @@ impl PyIterProtocol for Reader {
         Ok(slf.into())
     }
 
-    fn __next__(mut slf: PyRefMut<Self>) -> PyResult<Option<CsvRecord>> {
+    fn __next__(mut slf: PyRefMut<Self>) -> PyResult<Option<Record>> {
         let mut record = CsvStringRecord::new();
         let result = slf
             .reader

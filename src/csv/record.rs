@@ -5,26 +5,26 @@ use pyo3::PyObjectProtocol;
 /// A single CSV record stored as valid UTF-8 bytes.
 #[pyclass]
 #[derive(Debug, Default)]
-pub struct CsvRecord {
+pub struct Record {
     record: Vec<String>,
 }
 
-impl From<StringRecord> for CsvRecord {
-    fn from(string_record: StringRecord) -> CsvRecord {
+impl From<StringRecord> for Record {
+    fn from(string_record: StringRecord) -> Record {
         let record = string_record.iter().map(str::to_string).collect::<Vec<_>>();
-        CsvRecord { record }
+        Record { record }
     }
 }
 
-impl From<&StringRecord> for CsvRecord {
-    fn from(string_record: &StringRecord) -> CsvRecord {
+impl From<&StringRecord> for Record {
+    fn from(string_record: &StringRecord) -> Record {
         let record = string_record.iter().map(str::to_string).collect::<Vec<_>>();
-        CsvRecord { record }
+        Record { record }
     }
 }
 
 #[pyproto]
-impl PyObjectProtocol for CsvRecord {
+impl PyObjectProtocol for Record {
     fn __repr__(&self) -> PyResult<String> {
         Ok(format!("{:?}", self))
     }
