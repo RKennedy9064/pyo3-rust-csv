@@ -97,7 +97,7 @@ impl ReaderBuilder {
     /// Builds a CSV parser from this configuration that reads data from
     /// the given file path.
     ///
-    /// If there was a proglem opening the file at the given path, 
+    /// If there was a proglem opening the file at the given path,
     /// then this returns the corresponding error.
     fn from_path(&self, path: &str) -> PyResult<Reader> {
         let reader = self
@@ -108,12 +108,12 @@ impl ReaderBuilder {
     }
 
     /// Whether to treat the first row as a special header row.
-    /// 
+    ///
     /// By default, the first row is treated as a special header row,
     /// which means the header is never returned by any of the record
     /// reading methods or iterators. When this is disabled (`yes` set
     /// to `false`), the first row is not treated specially.
-    /// 
+    ///
     /// Note that the `headers` and `byte_headers` methods are unaffected
     /// by whether this is set. Those methods always return the first record.
     fn has_headers(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
@@ -122,7 +122,7 @@ impl ReaderBuilder {
     }
 
     /// The quote character to use when parsing CSV.
-    /// 
+    ///
     /// The default is `b'"'`.
     fn quote(mut slf: PyRefMut<Self>, py: Python, quote: u8) -> PyResult<PyObject> {
         slf.builder.quote(quote);
@@ -130,7 +130,7 @@ impl ReaderBuilder {
     }
 
     /// Enable or disable quoting.
-    /// 
+    ///
     /// This is enabled by default, but it may be disabled. When disabled,
     /// quotes are not treated specially.
     fn quoting(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {

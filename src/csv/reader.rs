@@ -2,7 +2,7 @@ use std::fs::File;
 
 use csv::{Reader as CsvReader, StringRecord as CsvStringRecord};
 use pyo3::prelude::*;
-use pyo3::{PyIterProtocol, PyObjectProtocol};
+use pyo3::{PyIterProtocol, PyObjectProtocol, PySequenceProtocol};
 
 use super::record::Record;
 use crate::errors::ApplicationError;
@@ -32,9 +32,9 @@ impl Reader {
             .reader
             .headers()
             .map_err(|err| ApplicationError::from(err))?
-            .into();
+            .clone();
 
-        Ok(headers)
+        Ok(headers.into())
     }
 
     #[staticmethod]
@@ -58,8 +58,9 @@ impl PyObjectProtocol for Reader {
 
 #[pyproto]
 impl PyIterProtocol for Reader {
-    fn __iter__(slf: PyRefMut<Self>) -> PyResult<Py<Reader>> {
-        Ok(slf.into())
+    fn __iter__(slf: PyRefMut<Self>) -> PyResult<PyObject> {
+        let py = unsafe { Python::assume_gil_acquired() };
+        Ok(slf.to_object(py))
     }
 
     fn __next__(mut slf: PyRefMut<Self>) -> PyResult<Option<Record>> {
