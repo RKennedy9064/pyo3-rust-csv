@@ -1,3 +1,5 @@
+use std::fmt;
+
 use csv::StringRecord;
 use pyo3::prelude::*;
 use pyo3::{
@@ -13,6 +15,12 @@ pub struct Record {
     pub elements: Vec<String>,
 }
 
+impl fmt::Display for Record {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.elements)
+    }
+}
+
 impl From<StringRecord> for Record {
     fn from(string_record: StringRecord) -> Record {
         let elements = string_record.iter().map(str::to_string).collect::<Vec<_>>();
@@ -23,11 +31,11 @@ impl From<StringRecord> for Record {
 #[pyproto]
 impl PyObjectProtocol for Record {
     fn __repr__(&self) -> PyResult<String> {
-        Ok(format!("{:?}", self))
+        Ok(format!("{}", self))
     }
 
     fn __str__(&self) -> PyResult<String> {
-        Ok(format!("{:?}", self))
+        Ok(format!("{}", self))
     }
 }
 

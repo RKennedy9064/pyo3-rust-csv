@@ -1,5 +1,8 @@
+use std::fmt;
+
 use csv::ReaderBuilder as CsvReaderBuilder;
 use pyo3::prelude::*;
+use pyo3::PyObjectProtocol;
 
 use super::reader::Reader;
 use crate::errors::ApplicationError;
@@ -17,6 +20,12 @@ use crate::errors::ApplicationError;
 #[derive(Debug, Default)]
 pub struct ReaderBuilder {
     pub inner: CsvReaderBuilder,
+}
+
+impl fmt::Display for ReaderBuilder {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.inner)
+    }
 }
 
 #[pymethods]
@@ -38,7 +47,11 @@ impl ReaderBuilder {
 
     /// Set the capacity (in bytes) of the buffer used in the CSV reader.
     /// This defaults to a reasonable setting.
-    pub fn buffer_capacity(mut slf: PyRefMut<Self>, py: Python, capacity: usize) -> PyResult<PyObject> {
+    pub fn buffer_capacity(
+        mut slf: PyRefMut<Self>,
+        py: Python,
+        capacity: usize,
+    ) -> PyResult<PyObject> {
         slf.inner.buffer_capacity(capacity);
         Ok(slf.into_object(py))
     }
@@ -136,5 +149,16 @@ impl ReaderBuilder {
     pub fn quoting(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
         slf.inner.quoting(yes);
         Ok(slf.into_object(py))
+    }
+}
+
+#[pyproto]
+impl PyObjectProtocol for ReaderBuilder {
+    fn __repr__(&self) -> PyResult<String> {
+        Ok(format!("{}", self))
+    }
+
+    fn __str__(&self) -> PyResult<String> {
+        Ok(format!("{}", self))
     }
 }

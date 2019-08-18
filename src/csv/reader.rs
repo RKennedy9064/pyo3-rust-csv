@@ -1,3 +1,4 @@
+use std::fmt;
 use std::fs::File;
 
 use csv::{Reader as CsvReader, StringRecord};
@@ -13,6 +14,12 @@ use crate::errors::ApplicationError;
 #[derive(Debug)]
 pub struct Reader {
     pub inner: CsvReader<File>,
+}
+
+impl fmt::Display for Reader {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.inner)
+    }
 }
 
 #[pymethods]
@@ -106,11 +113,11 @@ impl Reader {
 #[pyproto]
 impl PyObjectProtocol for Reader {
     fn __repr__(&self) -> PyResult<String> {
-        Ok(format!("{:?}", self))
+        Ok(format!("{}", self))
     }
 
     fn __str__(&self) -> PyResult<String> {
-        Ok(format!("{:?}", self))
+        Ok(format!("{}", self))
     }
 }
 

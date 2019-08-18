@@ -5,12 +5,12 @@ use pyo3::prelude::*;
 use pyo3::PyObjectProtocol;
 
 /// A position in CSV data.
-/// 
+///
 /// A position is used to report errors in CSV data. All positions include
 /// the byte offset, line number and record index at which the error occured.
-/// 
+///
 /// Byte offsets and record indices start at `0`. Line numbers start at `1`
-/// 
+///
 /// A CSV reader will automatically assign the position of each record.
 #[pyclass]
 #[derive(Debug)]
@@ -63,7 +63,7 @@ impl Position {
     }
 
     /// Sets the line number of this position.
-    /// 
+    ///
     /// If the line number is less then `1`, then this method panics.
     pub fn set_line(mut slf: PyRefMut<Self>, py: Python, line: u64) -> PyResult<PyObject> {
         slf.inner.set_line(line);
