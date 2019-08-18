@@ -8,9 +8,9 @@ use pyo3::{
 
 /// A single CSV record stored as valid UTF-8 bytes.
 #[pyclass]
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Record {
-    elements: Vec<String>,
+    pub elements: Vec<String>,
 }
 
 impl From<StringRecord> for Record {

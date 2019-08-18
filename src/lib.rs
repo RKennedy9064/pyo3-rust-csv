@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 
-mod csv;
-mod errors;
+pub mod csv;
+pub mod errors;
 
 use crate::csv::Reader;
 use crate::csv::ReaderBuilder;

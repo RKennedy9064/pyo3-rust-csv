@@ -16,7 +16,7 @@ use crate::errors::ApplicationError;
 #[pyclass]
 #[derive(Debug, Default)]
 pub struct ReaderBuilder {
-    builder: CsvReaderBuilder,
+    pub inner: CsvReaderBuilder,
 }
 
 #[pymethods]
@@ -31,15 +31,15 @@ impl ReaderBuilder {
     ///
     /// This sets the delimiter and record terminator to the ASCII unit
     /// separator `(\x1F)` and record separator `(\x1E)` respectively.
-    fn ascii(mut slf: PyRefMut<Self>, py: Python) -> PyResult<PyObject> {
-        slf.builder.ascii();
+    pub fn ascii(mut slf: PyRefMut<Self>, py: Python) -> PyResult<PyObject> {
+        slf.inner.ascii();
         Ok(slf.into_object(py))
     }
 
     /// Set the capacity (in bytes) of the buffer used in the CSV reader.
     /// This defaults to a reasonable setting.
-    fn buffer_capacity(mut slf: PyRefMut<Self>, py: Python, capacity: usize) -> PyResult<PyObject> {
-        slf.builder.buffer_capacity(capacity);
+    pub fn buffer_capacity(mut slf: PyRefMut<Self>, py: Python, capacity: usize) -> PyResult<PyObject> {
+        slf.inner.buffer_capacity(capacity);
         Ok(slf.into_object(py))
     }
 
@@ -49,16 +49,16 @@ impl ReaderBuilder {
     /// then that line is ignored by the CSV parser.
     ///
     /// This is disabled by default.
-    fn comment(mut slf: PyRefMut<Self>, py: Python, comment: Option<u8>) -> PyResult<PyObject> {
-        slf.builder.comment(comment);
+    pub fn comment(mut slf: PyRefMut<Self>, py: Python, comment: Option<u8>) -> PyResult<PyObject> {
+        slf.inner.comment(comment);
         Ok(slf.into_object(py))
     }
 
     /// The field to use when parsing CSV.
     ///
     /// The default is `b','`.
-    fn delimiter(mut slf: PyRefMut<Self>, py: Python, delimiter: u8) -> PyResult<PyObject> {
-        slf.builder.delimiter(delimiter);
+    pub fn delimiter(mut slf: PyRefMut<Self>, py: Python, delimiter: u8) -> PyResult<PyObject> {
+        slf.inner.delimiter(delimiter);
         Ok(slf.into_object(py))
     }
 
@@ -66,8 +66,8 @@ impl ReaderBuilder {
     ///
     /// This is enabled by default, but it may be disabled. When disabled,
     /// doubled quotes are not interpreted as escapes.
-    fn double_quote(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
-        slf.builder.double_quote(yes);
+    pub fn double_quote(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
+        slf.inner.double_quote(yes);
         Ok(slf.into_object(py))
     }
 
@@ -77,8 +77,8 @@ impl ReaderBuilder {
     /// character like `\` (instead of escaping quotes by doubling them).
     ///
     /// By default, recognizing these idiosyncratic escapes is disabled.
-    fn escape(mut slf: PyRefMut<Self>, py: Python, escape: Option<u8>) -> PyResult<PyObject> {
-        slf.builder.escape(escape);
+    pub fn escape(mut slf: PyRefMut<Self>, py: Python, escape: Option<u8>) -> PyResult<PyObject> {
+        slf.inner.escape(escape);
         Ok(slf.into_object(py))
     }
 
@@ -89,8 +89,8 @@ impl ReaderBuilder {
     /// number of fields in a previous record.
     ///
     /// When enabled, this error checking is turned off.
-    fn flexible(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
-        slf.builder.flexible(yes);
+    pub fn flexible(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
+        slf.inner.flexible(yes);
         Ok(slf.into_object(py))
     }
 
@@ -99,12 +99,12 @@ impl ReaderBuilder {
     ///
     /// If there was a proglem opening the file at the given path,
     /// then this returns the corresponding error.
-    fn from_path(&self, path: &str) -> PyResult<Reader> {
-        let reader = self
-            .builder
+    pub fn from_path(&self, path: &str) -> PyResult<Reader> {
+        let inner = self
+            .inner
             .from_path(path)
             .map_err(|err| ApplicationError::from(err))?;
-        Ok(Reader { reader })
+        Ok(Reader { inner })
     }
 
     /// Whether to treat the first row as a special header row.
@@ -116,16 +116,16 @@ impl ReaderBuilder {
     ///
     /// Note that the `headers` and `byte_headers` methods are unaffected
     /// by whether this is set. Those methods always return the first record.
-    fn has_headers(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
-        slf.builder.has_headers(yes);
+    pub fn has_headers(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
+        slf.inner.has_headers(yes);
         Ok(slf.into_object(py))
     }
 
     /// The quote character to use when parsing CSV.
     ///
     /// The default is `b'"'`.
-    fn quote(mut slf: PyRefMut<Self>, py: Python, quote: u8) -> PyResult<PyObject> {
-        slf.builder.quote(quote);
+    pub fn quote(mut slf: PyRefMut<Self>, py: Python, quote: u8) -> PyResult<PyObject> {
+        slf.inner.quote(quote);
         Ok(slf.into_object(py))
     }
 
@@ -133,8 +133,8 @@ impl ReaderBuilder {
     ///
     /// This is enabled by default, but it may be disabled. When disabled,
     /// quotes are not treated specially.
-    fn quoting(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
-        slf.builder.quoting(yes);
+    pub fn quoting(mut slf: PyRefMut<Self>, py: Python, yes: bool) -> PyResult<PyObject> {
+        slf.inner.quoting(yes);
         Ok(slf.into_object(py))
     }
 }
