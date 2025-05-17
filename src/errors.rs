@@ -1,19 +1,19 @@
-use failure::Fail;
-use pyo3::exceptions::OSError;
+use pyo3::exceptions::PyOSError;
 use pyo3::PyErr;
+use thiserror::Error;
 
-#[derive(Debug, Fail)]
+#[derive(Debug, Error)]
 pub enum ApplicationError {
-    #[fail(display = "{}", error)]
+    #[error("{error}")]
     Csv { error: csv::Error },
 
-    #[fail(display = "{}", error)]
+    #[error("{error}")]
     SerdeJson { error: serde_json::Error },
 }
 
 impl From<ApplicationError> for PyErr {
     fn from(err: ApplicationError) -> PyErr {
-        OSError::py_err(err.to_string())
+        PyErr::new::<PyOSError, _>(err.to_string())
     }
 }
 

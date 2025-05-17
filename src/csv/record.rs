@@ -1,9 +1,8 @@
 use csv::StringRecord;
 use pyo3::prelude::*;
-use pyo3::PyObjectProtocol;
 
 /// A single CSV record stored as valid UTF-8 bytes.
-#[pyclass]
+#[pyclass(module = "rust_csv")]
 #[derive(Debug, Default)]
 pub struct CsvRecord {
     record: Vec<String>,
@@ -23,8 +22,13 @@ impl From<&StringRecord> for CsvRecord {
     }
 }
 
-#[pyproto]
-impl PyObjectProtocol for CsvRecord {
+#[pymethods]
+impl CsvRecord {
+    #[getter]
+    pub fn record(&self) -> Vec<String> {
+        self.record.clone()
+    }
+
     fn __repr__(&self) -> PyResult<String> {
         Ok(format!("{:?}", self))
     }
